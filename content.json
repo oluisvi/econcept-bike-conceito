@@ -1,0 +1,105 @@
+{
+  "slug": "econcept-bike-conceito",
+  "site": "econcept",
+  "brand": "E-Concept Bike",
+  "title": "E-Concept Bike · catálogo conceitual",
+  "theme": "#0e282b",
+  "kicker": "IDEIA DE CATÁLOGO · TAUBATÉ/SP",
+  "heroTitle": "Mobilidade elétrica. | Do seu jeito.",
+  "heroIntro": "Uma prévia de página própria para apresentar opções, facilitar a comparação e encaminhar a conversa para a equipe da E-Concept.",
+  "region": "E-Concept Bike · Taubaté / SP",
+  "regionShort": "Taubaté / SP",
+  "artLabel": "E-CONCEPT BIKE · ESTUDO VISUAL",
+  "artFoot": "ESCOLHA | COM CALMA",
+  "heroType": "bike",
+  "ticker": "CONHECER AS OPÇÕES TAMBÉM FAZ PARTE DA ESCOLHA",
+  "catalogIntro": "Imaginamos um caminho para explorar as opções e tirar dúvidas com a equipe. O catálogo e as categorias ainda serão definidos com vocês.",
+  "disclaimer": "Os cartões, imagens e dados são demonstrativos; nenhum modelo, especificação, preço ou disponibilidade foi informado pela E-Concept nesta conversa.",
+  "journeyCopy": "A página pode complementar Instagram e WhatsApp: a pessoa explora o catálogo, salva perguntas e segue para o atendimento humano já falando de uma opção.",
+  "shopTitle": "A escolha segue com vocês.",
+  "shopCopy": "Dúvidas sobre versão, preço, disponibilidade e atendimento continuam no WhatsApp da loja.",
+  "whatsapp": "5512991000337",
+  "whatsappIntro": "Olá, Eloísa! Vi o conceito e queria conversar sobre como a E-Concept apresenta as opções e atende as dúvidas sobre os modelos.",
+  "whatsappSelection": "Olá, E-Concept! Tenho interesse em {itens}. Podem me contar quais modelos estão disponíveis e enviar as informações atualizadas?",
+  "whatsappProduct": "Olá, E-Concept! Quero conhecer melhor {item}. Podem me enviar os detalhes atualizados?",
+  "products": [
+    {
+      "id": "ec-01",
+      "name": "Categoria 01",
+      "category": "Motos elétricas",
+      "type": "moto",
+      "description": "Exemplo de cartão para demonstrar uma categoria possível; validar com a loja.",
+      "details": "O conteúdo final deve usar o nome do modelo, as imagens autorizadas e os dados confirmados pela equipe.",
+      "facts": [
+        [
+          "Modelo",
+          "A confirmar"
+        ],
+        [
+          "Autonomia",
+          "A confirmar"
+        ],
+        [
+          "Preço",
+          "Consultar"
+        ],
+        [
+          "Disponibilidade",
+          "Consultar"
+        ]
+      ]
+    },
+    {
+      "id": "ec-02",
+      "name": "Categoria 02",
+      "category": "Bikes elétricas",
+      "type": "bike",
+      "description": "Exemplo visual de organização por categoria, sem afirmar disponibilidade.",
+      "details": "O nome e a categoria são ilustrativos até a equipe indicar quais produtos entram no catálogo.",
+      "facts": [
+        [
+          "Modelo",
+          "A confirmar"
+        ],
+        [
+          "Ficha",
+          "A confirmar"
+        ],
+        [
+          "Preço",
+          "Consultar"
+        ],
+        [
+          "Disponibilidade",
+          "Consultar"
+        ]
+      ]
+    },
+    {
+      "id": "ec-03",
+      "name": "Categoria 03",
+      "category": "Outras opções",
+      "type": "scooter",
+      "description": "Um cartão para demonstrar busca, favoritos e contato por item.",
+      "details": "Categorias, fotos, especificações, versões e preços ainda dependem do catálogo oficial.",
+      "facts": [
+        [
+          "Modelo",
+          "A confirmar"
+        ],
+        [
+          "Ficha",
+          "A confirmar"
+        ],
+        [
+          "Preço",
+          "Consultar"
+        ],
+        [
+          "Disponibilidade",
+          "Consultar"
+        ]
+      ]
+    }
+  ]
+}

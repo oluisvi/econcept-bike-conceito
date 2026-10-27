@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e282b">
+  <meta name="description" content="Prévia conceitual de catálogo de mobilidade elétrica. Produtos e informações sujeitos a confirmação pela loja.">
+  <title>E-Concept Bike · catálogo conceitual · conceito</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body data-site="econcept">
+  <div class="notice"><span>PRÉVIA CONCEITUAL</span><i></i><span>PRODUTOS E DADOS A VALIDAR COM A LOJA</span></div>
+  <header class="topbar wrap">
+    <a class="brand" href="#inicio" id="brand" aria-label="Início"></a>
+    <nav aria-label="Navegação principal"><a href="#catalogo">Catálogo</a><a href="#escolha">Como escolher</a><a href="#loja">Contato</a></nav>
+    <div class="head-actions"><button class="quiet" id="searchButton">Buscar</button><button class="basket" id="basketButton">Minha seleção <span id="basketCount">0</span></button></div>
+  </header>
+  <main>
+    <section class="hero wrap" id="inicio">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span><span id="heroKicker"></span></div>
+        <h1 id="heroTitle"></h1>
+        <p id="heroIntro"></p>
+        <div class="hero-actions"><a class="button primary" href="#catalogo">Explorar opções <span>↘</span></a><a class="text-link" href="#escolha">Entender a proposta <span>↓</span></a></div>
+        <div class="hero-foot"><span id="region"></span><span>CONCEITO / CATÁLOGO</span></div>
+      </div>
+      <div class="hero-art" id="heroArt" aria-label="Ilustração conceitual de veículo elétrico"></div>
+      <span class="hero-index">01 / MOBILIDADE</span>
+    </section>
+    <div class="ticker" aria-hidden="true"><div id="tickerText"></div></div>
+    <section class="section wrap" id="catalogo">
+      <div class="section-head"><div><span class="eyebrow">CATÁLOGO / DEMONSTRAÇÃO</span><h2>Comece pelo<br><em>seu caminho.</em></h2></div><p id="catalogIntro"></p></div>
+      <div class="toolbar"><div class="filters" role="group" aria-label="Filtrar por categoria" id="filters"></div><label class="searchbox"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Buscar no catálogo" aria-label="Buscar no catálogo" autocomplete="off"><kbd>/</kbd></label><button class="compare-button" id="compareButton">Comparar <span id="compareCount">0</span></button></div>
+      <div class="catalog-meta"><span id="resultCount"></span><span>VALORES E DISPONIBILIDADE: CONSULTAR</span></div>
+      <div class="catalog-grid" id="products" aria-live="polite"></div>
+      <p class="disclaimer" id="catalogDisclaimer"></p>
+    </section>
+    <section class="editorial" id="escolha"><div class="wrap editorial-grid">
+      <div class="route-card"><span class="eyebrow">UMA ESCOLHA MAIS CLARA</span><svg viewBox="0 0 580 390" role="img" aria-label="Caminho conceitual entre descoberta, comparação e conversa"><path class="route-path" d="M58 304 C144 250 105 151 226 141 S345 284 418 200 488 95 526 72"/><circle cx="58" cy="304" r="14"/><circle cx="226" cy="141" r="14"/><circle cx="418" cy="200" r="14"/><circle cx="526" cy="72" r="14"/><text x="34" y="350">DESCOBRIR</text><text x="185" y="105">COMPARAR</text><text x="374" y="250">ESCOLHER</text><text x="464" y="43">CONVERSAR</text></svg><span class="route-stamp">UM PASSO<br>DE CADA VEZ</span></div>
+      <div class="editorial-copy"><span class="eyebrow">A COMPRA CONTINUA HUMANA</span><h2>Olhe com calma.<br><em>Decida com a equipe.</em></h2><p id="journeyCopy"></p><div class="steps"><div><b>01</b><span>Explore por categoria</span></div><div><b>02</b><span>Salve ou compare opções</span></div><div><b>03</b><span>Pergunte sobre um modelo</span></div></div><a class="button outline" id="editorialCta" target="_blank" rel="noreferrer">Conversar com a equipe <span>↗</span></a></div>
+    </div></section>
+    <section class="section wrap shop" id="loja"><div><span class="eyebrow" id="shopEyebrow"></span><h2 id="shopTitle"></h2><p id="shopCopy"></p></div><div class="shop-card"><span class="eyebrow">CONFIRME DIRETO COM A EQUIPE</span><div class="shop-row"><span>Modelo e versão</span><b>Consultar</b></div><div class="shop-row"><span>Preço e disponibilidade</span><b>Consultar</b></div><div class="shop-row"><span>Atendimento</span><b id="shopRegion"></b></div><a class="button primary full" id="shopCta" target="_blank" rel="noreferrer">Chamar no WhatsApp <span>↗</span></a></div></section>
+  </main>
+  <footer class="footer"><div class="wrap footer-inner"><a class="brand" id="footerBrand" href="#inicio"></a><span>IDEIA DE APRESENTAÇÃO · DADOS A VALIDAR</span><a href="#catalogo">Voltar ao catálogo ↑</a></div><div class="wrap foot-note">Projeto conceitual da ServAgency. Não representa uma página oficial da loja. Imagens, produtos, preços e especificações são demonstrativos até validação.</div></footer>
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="drawerTitle"><div class="drawer-head"><div><span class="eyebrow">SUA LISTA</span><h2 id="drawerTitle">Minha seleção</h2></div><button class="close" id="drawerClose" aria-label="Fechar">×</button></div><div id="selectionItems"></div><p class="drawer-note">Esta seleção prepara a conversa; não é um pedido ou checkout.</p><a class="button primary full" id="selectionCta" target="_blank" rel="noreferrer">Consultar no WhatsApp <span>↗</span></a></aside>
+  <div class="modal-back" id="modalBack" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="close modal-x" id="modalClose" aria-label="Fechar">×</button><div id="modalContent"></div></section></div>
+  <div class="compare-panel" id="comparePanel" aria-hidden="true"><div class="compare-head"><div><span class="eyebrow">LADO A LADO</span><h3>Comparar opções</h3></div><button class="close" id="compareClose" aria-label="Fechar comparação">×</button></div><div id="compareContent"></div><p class="fine">Dados ilustrativos neste conceito; confirme ficha, versão e disponibilidade com a equipe.</p></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>

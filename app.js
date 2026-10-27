@@ -1,0 +1,84 @@
+(() => {
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const state = { config:null, category:"Todos", search:"", selected:new Set(), compared:new Set(), favorites:new Set(JSON.parse(localStorage.getItem("demo-favorites") || "[]")) };
+  let lastFocus = null;
+  const safe = (value) => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+  const waLink = (text) => "https://wa.me/" + state.config.whatsapp + "?text=" + encodeURIComponent(text);
+  const vehicle = (type, label) => {
+    const wheels = type === "triciclo" ? '<circle cx="117" cy="235" r="42"/><circle cx="490" cy="235" r="42"/><circle cx="303" cy="235" r="42"/>' : '<circle cx="139" cy="235" r="48"/><circle cx="467" cy="235" r="48"/>';
+    const frame = type === "bike" ? '<path d="M139 235 244 117l87 118H139l111-74 57-105h67l61 99H331"/><path d="M226 114h60M244 117l-32-23M450 156h38M332 235l32-60"/>' : type === "triciclo" ? '<path d="M117 235h186l63-73h112M303 235l-48-95h145M233 140h171l22 22M360 162v73"/><path d="M333 136h62M458 162h38"/>' : '<path d="M139 235h122l49-85h102l55 85M261 235l51-89 54 89M302 146h116M410 150l31-32h36"/><path d="M262 195c30-39 97-46 141-15l28 31H263z" fill="currentColor" opacity=".18"/><path d="M264 190h130"/>';
+    const battery = type === "bike" ? '<rect x="298" y="165" width="30" height="52" rx="5"/>' : '<rect x="315" y="162" width="46" height="38" rx="7"/>';
+    return '<svg viewBox="0 0 610 310" role="img" aria-label="' + safe(label) + '"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">' + wheels + frame + battery + '</g><path d="M0 278H610" stroke="currentColor" opacity=".2" stroke-width="2"/></svg>';
+  };
+  const toast = (text) => { const node=$("#toast"); node.textContent=text; node.classList.add("show"); clearTimeout(toast.timer); toast.timer=setTimeout(()=>node.classList.remove("show"),2100); };
+  const init = async () => {
+    const config = await fetch("content.json").then(r => { if(!r.ok) throw new Error("content.json não carregou"); return r.json(); });
+    state.config=config;
+    document.title=config.brand + " · conceito";
+    $("#brand").innerHTML=safe(config.brand)+"<span class=\"mark\"></span>";
+    $("#footerBrand").innerHTML=safe(config.brand)+"<span class=\"mark\"></span>";
+    $("#brand").setAttribute("aria-label",config.brand+" — início");
+    $("#heroKicker").textContent=config.kicker;
+    $("#heroTitle").innerHTML=safe(config.heroTitle).replace("|","<br><em>")+ (config.heroTitle.includes("|") ? "</em>" : "");
+    $("#heroIntro").textContent=config.heroIntro;
+    $("#region").textContent=config.region;
+    $("#heroArt").innerHTML='<span class="hero-art-label">'+safe(config.artLabel)+'</span>'+vehicle(config.heroType,config.artLabel)+'<span class="hero-art-tag">'+safe(config.artFoot).replace("|","<br>")+'</span>';
+    $("#tickerText").innerHTML=safe(config.ticker)+" <b>✳</b> CATÁLOGO CONCEITUAL <b>✳</b> FALE COM A EQUIPE <b>✳</b> "+safe(config.ticker);
+    $("#catalogIntro").textContent=config.catalogIntro;
+    $("#catalogDisclaimer").textContent=config.disclaimer;
+    $("#journeyCopy").textContent=config.journeyCopy;
+    $("#editorialCta").href=waLink(config.whatsappIntro);
+    $("#shopEyebrow").textContent=config.region;
+    $("#shopTitle").textContent=config.shopTitle;
+    $("#shopCopy").textContent=config.shopCopy;
+    $("#shopRegion").textContent=config.regionShort;
+    $("#shopCta").href=waLink(config.whatsappIntro);
+    const categories=["Todos",...new Set(config.products.map(p=>p.category))];
+    $("#filters").innerHTML=categories.map((c,i)=>'<button class="filter '+(i===0?"active":"")+'" data-category="'+safe(c)+'" aria-pressed="'+(i===0)+'">'+safe(c)+'</button>').join("");
+    $$(".filter").forEach(btn=>btn.addEventListener("click",()=>{state.category=btn.dataset.category; $$(".filter").forEach(x=>{const on=x===btn;x.classList.toggle("active",on);x.setAttribute("aria-pressed",String(on));});render();}));
+    $("#search").addEventListener("input",e=>{state.search=e.target.value.trim().toLocaleLowerCase("pt-BR");render();});
+    $("#searchButton").addEventListener("click",()=>{$("#catalogo").scrollIntoView({behavior:"smooth"});$("#search").focus();});
+    $("#basketButton").addEventListener("click",openDrawer);
+    $("#drawerClose").addEventListener("click",closeDrawer);
+    $("#scrim").addEventListener("click",closeDrawer);
+    $("#modalClose").addEventListener("click",closeModal);
+    $("#modalBack").addEventListener("click",e=>{if(e.target===e.currentTarget)closeModal();});
+    $("#compareButton").addEventListener("click",openCompare);
+    $("#compareClose").addEventListener("click",closeCompare);
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDrawer();closeModal();closeCompare();}if(e.key==="/"&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();$("#search").focus();}});
+    render(); paintSelection();
+  };
+  const productVisual=p=>p.image?'<img class="catalog-photo" src="'+safe(p.image)+'" alt="'+safe(p.imageAlt||p.name)+'" loading="lazy">':'<div class="photo-pending"><span>FOTO REAL PENDENTE</span><small>imagem do produto a incluir após confirmação da loja</small></div>';
+  const visibleProducts=()=>state.config.products.filter(p=>(state.category==="Todos"||p.category===state.category)&&(!state.search||(p.name+" "+p.category+" "+p.description).toLocaleLowerCase("pt-BR").includes(state.search)));
+  const render=()=>{
+    const items=visibleProducts();
+    $("#resultCount").textContent=items.length+ (items.length===1?" OPÇÃO NO CONCEITO":" OPÇÕES NO CONCEITO");
+    if(!items.length){$("#products").innerHTML='<div class="empty">Não encontrei essa opção. Tente outra palavra ou categoria.</div>';return;}
+    $("#products").innerHTML=items.map(p=>{
+      const fav=state.favorites.has(p.id),selected=state.selected.has(p.id),comp=state.compared.has(p.id);
+      return '<article class="product-card" data-id="'+safe(p.id)+'"><div class="product-visual"><span class="badge">'+(p.image?"FOTO REAL · REFERÊNCIA":"FOTO REAL PENDENTE")+'</span><button class="favorite '+(fav?"saved":"")+'" data-favorite="'+safe(p.id)+'" aria-label="'+(fav?"Remover favorito":"Salvar como favorito")+'" aria-pressed="'+fav+'">'+(fav?"♥":"♡")+'</button>'+productVisual(p)+'</div><div class="card-body"><div class="card-topline"><span>'+safe(p.category)+'</span><label class="compare-check"><input type="checkbox" data-compare="'+safe(p.id)+'" '+(comp?"checked":"")+'> COMPARAR</label></div><div class="card-title-row"><h3>'+safe(p.name)+'</h3><span class="price">SEM PREÇO<br>CONFIRMADO</span></div><p>'+safe(p.description)+'</p><div class="fact-list">'+p.facts.slice(0,2).map(f=>'<div class="fact"><span>'+safe(f[0])+'</span><strong>'+safe(f[1])+'</strong></div>').join("")+'</div><div class="card-controls"><button data-details="'+safe(p.id)+'">Ver detalhes ↗</button><button class="select" data-select="'+safe(p.id)+'">'+(selected?"Na seleção ✓":"Selecionar")+'</button></div></div></article>';
+    }).join("");
+    $$('[data-favorite]').forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.favorite;state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);localStorage.setItem("demo-favorites",JSON.stringify([...state.favorites]));render();toast(state.favorites.has(id)?"Salvo nos favoritos":"Removido dos favoritos");}));
+    $$('[data-select]').forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.select;state.selected.has(id)?state.selected.delete(id):state.selected.add(id);paintSelection();render();toast(state.selected.has(id)?"Adicionado à seleção":"Removido da seleção");}));
+    $$('[data-details]').forEach(b=>b.addEventListener("click",()=>openDetails(state.config.products.find(p=>p.id===b.dataset.details))));
+    $$('[data-compare]').forEach(b=>b.addEventListener("change",()=>{if(b.checked&&state.compared.size>=3){b.checked=false;toast("Compare até 3 opções por vez");return;}b.checked?state.compared.add(b.dataset.compare):state.compared.delete(b.dataset.compare);$("#compareCount").textContent=state.compared.size; }));
+  };
+  const paintSelection=()=>{
+    const items=state.config.products.filter(p=>state.selected.has(p.id));
+    $("#basketCount").textContent=items.length;
+    $("#selectionItems").innerHTML=items.length?items.map(p=>'<div class="selection-item"><div><b>'+safe(p.name)+'</b><small>'+safe(p.category)+' · dados a confirmar</small></div><button data-remove="'+safe(p.id)+'">Remover</button></div>').join(""):'<p class="drawer-note">Sua lista está vazia. Explore o catálogo e salve uma opção para perguntar à equipe.</p>';
+    $$('[data-remove]').forEach(b=>b.addEventListener("click",()=>{state.selected.delete(b.dataset.remove);paintSelection();render();}));
+    const context=items.length?items.map(p=>p.name+" ("+p.category+")").join(", "):"as opções disponíveis";
+    $("#selectionCta").href=waLink(state.config.whatsappSelection.replace("{itens}",context));
+  };
+  const openDrawer=()=>{lastFocus=document.activeElement;$("#scrim").hidden=false;$("#drawer").classList.add("open");$("#drawer").setAttribute("aria-hidden","false");$("#drawerClose").focus();};
+  const closeDrawer=()=>{$("#drawer").classList.remove("open");$("#drawer").setAttribute("aria-hidden","true");$("#scrim").hidden=true;if(lastFocus)lastFocus.focus();};
+  const openDetails=p=>{if(!p)return;lastFocus=document.activeElement;$("#modalContent").innerHTML='<div class="modal-grid"><div class="modal-visual">'+productVisual(p)+'</div><div><span class="eyebrow">'+safe(p.category)+' / DEMONSTRAÇÃO</span><h2 id="modalTitle">'+safe(p.name)+'</h2><p>'+safe(p.description)+' '+safe(p.details)+'</p><div class="modal-facts">'+p.facts.map(f=>'<div>'+safe(f[0])+ '<b>'+safe(f[1])+'</b></div>').join("")+'</div><p class="fine">A foto é uma referência real recebida da loja; nome comercial, correspondência do modelo, ficha, preço e disponibilidade precisam ser confirmados.</p><a class="button primary" target="_blank" rel="noreferrer" href="'+waLink(state.config.whatsappProduct.replace("{item}",p.name))+'">Perguntar à equipe <span>↗</span></a><button class="button outline modal-add" data-modal-select="'+safe(p.id)+'">Adicionar à seleção</button></div></div>';
+    $("#modalBack").classList.add("open");$("#modalBack").setAttribute("aria-hidden","false");$("#modalClose").focus();const add=$('[data-modal-select]');add.addEventListener("click",()=>{state.selected.add(p.id);paintSelection();render();closeModal();openDrawer();});};
+  const closeModal=()=>{$("#modalBack").classList.remove("open");$("#modalBack").setAttribute("aria-hidden","true");if(lastFocus)lastFocus.focus();};
+  const openCompare=()=>{const items=state.config.products.filter(p=>state.compared.has(p.id));if(items.length<2){toast("Marque ao menos duas opções para comparar");return;}const labels=[...new Set(items.flatMap(p=>p.facts.map(f=>f[0])))];$("#compareContent").innerHTML='<table class="compare-table"><thead><tr><td>INFORMAÇÃO</td>'+items.map(p=>'<th>'+safe(p.name)+'</th>').join("")+'</tr></thead><tbody>'+labels.map(label=>'<tr><td>'+safe(label)+'</td>'+items.map(p=>'<td>'+safe((p.facts.find(f=>f[0]===label)||["","A confirmar"])[1])+'</td>').join("")+'</tr>').join("")+'</tbody></table>';
+    $("#comparePanel").classList.add("open");$("#comparePanel").setAttribute("aria-hidden","false");};
+  const closeCompare=()=>{$("#comparePanel").classList.remove("open");$("#comparePanel").setAttribute("aria-hidden","true");};
+  init().catch(err=>{console.error(err);$("#products").innerHTML='<div class="empty">Não foi possível carregar o catálogo demonstrativo.</div>';});
+})();
